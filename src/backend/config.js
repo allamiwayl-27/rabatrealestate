@@ -52,8 +52,36 @@ const DB_TABLES = {
   contactMessages: process.env.DB_TABLE_CONTACT_MESSAGES || 'contact_messages'
 };
 
+const LOCATION_ALIASES = {
+  'hay riad': ['riyad', 'hayriad', 'hay riyad'],
+  riyad: ['hay riad', 'hayriad'],
+  'riyad extension': ['hay riad'],
+  'hassan centre ville': ['hassan', 'centre ville'],
+  'guich oudaya': ['guich oud', 'guich'],
+  ocean: ['l ocean', 'locean', 'l ocean'],
+  'les orangers': ['orangers'],
+  orangers: ['les orangers'],
+  kebibat: ['qbibat'],
+  qbibat: ['kebibat'],
+  takadoum: ['takaddoum'],
+  takaddoum: ['takadoum'],
+  'el youssoufia': ['youssoufia'],
+  youssoufia: ['el youssoufia'],
+  'aviation - mabella': ['aviation', 'mabella'],
+  aviation: ['aviation - mabella', 'mabella'],
+  mabella: ['aviation - mabella', 'aviation'],
+  'hay massira': ['massira', 'hay al massira'],
+  massira: ['hay massira', 'hay al massira'],
+  'hay el menzah': ['el menzeh'],
+  'el menzeh': ['hay el menzah'],
+  'hay nahda': ['nahda'],
+  nahda: ['hay nahda'],
+  'hay al fath': ['hay el fath', 'fath'],
+  'hay el fath': ['hay al fath', 'fath'],
+};
+
 module.exports = {
   loadDotEnv,
   ROOT, SITE_DOMAIN, SITE_PROTOCOL, SITE_URL,
-  DB_TABLES,
+  DB_TABLES, LOCATION_ALIASES,
 };
