@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "realestatecapitale": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": ["C:\\RABATICI\\mcp-server.js"],
+      "env": {
+        "DATABASE_URL": "postgresql://scraper:admin@127.0.0.1:5432/mubawab"
+      }
+    }
+  }
+}

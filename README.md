@@ -1,88 +1,162 @@
-# @realestatecapitale/mcp-server
+# Real Estate Capitale — MCP Server
 
-Serveur MCP (Model Context Protocol) pour les données immobilières de Rabat, Salé et Témara.
+MCP server for real estate search, property valuation, market analysis, and lead management in Rabat, Salé, and Témara, Morocco.
 
-## Installation
-
-```bash
-npm install -g @realestatecapitale/mcp-server
-```
-
-Ou exécution directe sans installation :
+## Quick Start
 
 ```bash
-npx @realestatecapitale/mcp-server          # mode stdio
-npx @realestatecapitale/mcp-server-http     # mode HTTP
+# Install
+npm install
+
+# Set database URL
+cp .env.example .env
+# Edit .env with your PostgreSQL connection string
+
+# Start stdio server (for Claude Desktop, opencode, Cursor)
+npm start
+
+# Or start HTTP/SSE server
+npm start:http
 ```
 
-## Utilisation
+## 17 Tools
 
-### Mode stdio (Claude Desktop, opencode, Cursor)
+| Tool | Description |
+|------|-------------|
+| `search_listings` | Search properties with filters (type, location, budget, surface, rooms) |
+| `get_listing` | Get full listing details by ID |
+| `estimate_property` | Estimate property value by quartier and surface |
+| `get_market_trends` | Price trends over time by quartier |
+| `get_quartier_stats` | Aggregated stats per quartier (price/m², count) |
+| `list_quartiers` | List all available quartiers |
+| `list_villes` | List all available cities |
+| `create_lead` | Create a lead (contact client) |
+| `get_comparables` | Find similar listings for valuation |
+| `get_investor_alerts` | Identify undervalued properties |
+| `get_price_analytics` | Price/m² analysis with distribution |
+| `get_rental_yield` | Rental yield by quartier |
+| `get_market_predictions` | 90-day price predictions |
+| `get_quartier_comparison` | Compare two quartiers side-by-side |
+| `get_suspicious_listings` | Detect outlier pricing |
+| `get_liquidity` | Market liquidity index |
+| `get_agency_leaderboard` | Agency ranking by volume |
+
+## Transports
+
+### stdio (local)
 
 ```bash
-mcp-server
+node bin/mcp-server
 ```
 
-### Mode HTTP/SSE
+For Claude Desktop, opencode, Cursor — reads JSON-RPC from stdin, writes to stdout.
+
+### HTTP/SSE (remote)
 
 ```bash
-mcp-server-http
-# Écoute sur le port 3001 (configurable via PORT)
+node bin/mcp-server-http
+# Listens on port 3001
 ```
+
+Endpoints:
+- `GET /` — Server info (Streamable HTTP discovery)
+- `POST /` — Synchronous JSON-RPC
+- `GET /sse` — SSE stream
+- `POST /messages?sessionId=...` — SSE session messages
+- `GET /health` — Health check
 
 ## Configuration
 
-```env
-DATABASE_URL=postgresql://user:pass@host:5432/db
-PORT=3001
+### Claude Desktop
+
+Copy `config/claude-desktop.json` to your Claude Desktop MCP config, or add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "realestatecapitale": {
+      "command": "node",
+      "args": ["/path/to/rabatrealestate/bin/mcp-server"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/mubawab"
+      }
+    }
+  }
+}
 ```
 
-| Variable | Défaut | Description |
-|---|---|---|
-| `DATABASE_URL` | — | URL de connexion PostgreSQL (obligatoire) |
-| `PORT` | `3001` | Port du serveur HTTP (mode HTTP uniquement) |
+### opencode
 
-## Outils MCP
-
-| Outil | Description |
-|---|---|
-| `search_listings` | Rechercher des biens avec filtres (transaction, lieu, budget, surface, type) |
-| `get_listing` | Détail complet d'un bien par son ID |
-| `estimate_property` | Estimation de prix au m² par quartier |
-| `get_market_trends` | Tendances du marché sur N mois |
-| `get_quartier_stats` | Statistiques agrégées par quartier |
-| `list_quartiers` | Liste des quartiers disponibles |
-| `list_villes` | Liste des villes disponibles |
-| `create_lead` | Créer un lead client |
-
-Documentation complète des outils : [docs/tools.md](docs/tools.md)
-
-## Production
-
-Le serveur est accessible publiquement à l'URL :
-
-```
-https://realestatecapitale.ma/mcp
+```json
+{
+  "mcp": {
+    "realestatecapitale": {
+      "type": "local",
+      "command": ["node", "bin/mcp-server"],
+      "env": { "DATABASE_URL": "..." }
+    }
+  }
+}
 ```
 
-Configuration opencode :
+### Remote (HTTP)
 
 ```json
 {
   "mcp": {
     "realestatecapitale": {
       "type": "remote",
-      "url": "https://realestatecapitale.ma/mcp",
-      "enabled": true
+      "url": "https://realestatecapitale.ma/mcp"
     }
   }
 }
 ```
 
+## Query Tool
+
+```bash
+# List tools
+node bin/query "tools/list"
+
+# Call a tool
+node bin/query 'tools/call {"name":"list_villes","arguments":{}}'
+
+# Query remote server
+MCP_URL=https://realestatecapitale.ma/mcp node bin/query "tools/list"
+```
+
+## Testing
+
+```bash
+npm test
+```
+
 ## Architecture
 
 ```
-Client → Cloudflare Worker → Tunnel → Web Server → MCP Server → PostgreSQL
+┌─────────────┐     stdio      ┌──────────────┐
+│ Claude Desktop│ ◄──────────── │ bin/mcp-server│
+│ opencode     │               │ (stdio)       │
+└─────────────┘               └──────┬───────┘
+                                      │
+┌─────────────┐     HTTP/SSE  ┌──────┴───────┐
+│ Remote AI   │ ◄──────────── │ bin/mcp-     │
+│ clients     │               │ server-http  │
+└─────────────┘               │ (port 3001)  │
+                              └──────┬───────┘
+                                     │
+                              ┌──────┴───────┐
+                              │ src/core/     │
+                              │ mcp-core.js   │
+                              │ (17 tools)    │
+                              └──────┬───────┘
+                                     │
+                              ┌──────┴───────┐
+                              │ PostgreSQL    │
+                              │ (mubawab)     │
+                              └──────────────┘
 ```
 
-Détails : [docs/architecture.md](docs/architecture.md)
+## License
+
+MIT

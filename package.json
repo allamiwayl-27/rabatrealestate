@@ -1,0 +1,58 @@
+{
+  "name": "@realestatecapitale/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for real estate search, valuation, and market data in Rabat, Salé, and Témara, Morocco",
+  "main": "src/core/mcp-core.js",
+  "bin": {
+    "realestatecapitale-mcp": "bin/mcp-server",
+    "realestatecapitale-mcp-http": "bin/mcp-server-http",
+    "realestatecapitale-query": "bin/query"
+  },
+  "scripts": {
+    "start": "node bin/mcp-server",
+    "start:http": "node bin/mcp-server-http",
+    "query": "node bin/query",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.9"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "real-estate",
+    "rabat",
+    "immobilier",
+    "morocco",
+    "ai",
+    "claude",
+    "opencode",
+    "property-search",
+    "valuation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allamiwayl-27/rabatrealestate.git"
+  },
+  "homepage": "https://realestatecapitale.ma",
+  "author": "Real Estate Capitale <contact@realestatecapitale.ma>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "config/",
+    "docs/",
+    "package.json",
+    "README.md"
+  ]
+}
