@@ -1,25 +1,20 @@
 {
-  "name": "ma.realestatecapitale/mcp",
-  "description": "MCP server for real estate search, property valuation, market analysis, and agent services in Rabat, Salé, and Témara, Morocco. Exposes 17 tools including search_listings, estimate_property, get_market_trends, get_investor_alerts, and lead management.",
-  "homepage": "https://realestatecapitale.ma",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "io.github.allamiwayl-27/rabatrealestate-mcp",
+  "description": "MCP server for real estate search, property valuation, market analysis, and agent services in Rabat, Salé, and Témara, Morocco. 17 tools.",
+  "title": "Real Estate Capitale MCP",
+  "websiteUrl": "https://realestatecapitale.ma",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/allamiwayl-27/rabatrealestate"
+    "url": "https://github.com/allamiwayl-27/rabatrealestate",
+    "source": "github"
   },
-  "version_detail": {
-    "version": "1.0.0",
-    "release_date": "2026-07-22"
-  },
-  "packages": [],
-  "_meta": {
-    "io.modelcontextprotocol.registry/publisher-provided": {
-      "category": "real-estate",
-      "tags": ["immobilier", "rabat", "morocco", "real-estate", "mcp", "property-search", "valuation"],
-      "transport": "streamable-http",
-      "endpoint": "https://realestatecapitale.ma/mcp",
-      "tools_count": 17,
-      "protocols": ["MCP 2025-03-26", "A2A 0.3"],
-      "languages": ["fr", "ar", "en"]
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "url": "https://realestatecapitale.ma/mcp",
+      "transport": {
+        "type": "streamable-http"
+      }
     }
-  }
+  ]
 }
