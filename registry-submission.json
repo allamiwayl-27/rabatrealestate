@@ -1,0 +1,13 @@
+{
+  "name": "ma.realestatecapitale/mcp",
+  "description": "MCP server for real estate search, property valuation, market analysis, and agent services in Rabat, Salé, and Témara, Morocco. 17 tools including search_listings, estimate_property, get_market_trends, get_investor_alerts, and lead management.",
+  "homepage": "https://realestatecapitale.ma",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/allamiwayl-27/rabatrealestate"
+  },
+  "version_detail": {
+    "version": "1.0.0",
+    "release_date": "2026-07-25"
+  }
+}
